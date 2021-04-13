@@ -6,6 +6,10 @@ from django.http.response import JsonResponse
 from django.template.loader import render_to_string
 
 
+def genForwarder(request):
+    return redirect('list-patient')
+
+
 def createPatient(request):
     context = {}
     if request.method == 'POST':
