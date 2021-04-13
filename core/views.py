@@ -13,51 +13,67 @@ def genForwarder(request):
 def createPatient(request):
     context = {}
     if request.method == 'POST':
-        v_first_name = request.POST.get('first_name')
-        v_last_name = request.POST.get('last_name')
-        v_date_of_birth = datetime.strptime(request.POST.get('date_of_birth'), '%m/%d/%Y').date()
-        patient_obj, created = Patient.objects.get_or_create(
-            first_name=v_first_name, last_name=v_last_name, date_of_birth=v_date_of_birth)
-        return redirect('list-patient')
+        try:
+            v_first_name = request.POST.get('first_name')
+            v_last_name = request.POST.get('last_name')
+            v_date_of_birth = datetime.strptime(
+                request.POST.get('date_of_birth'), '%m/%d/%Y').date()
+            patient_obj, created = Patient.objects.get_or_create(
+                first_name=v_first_name, last_name=v_last_name, date_of_birth=v_date_of_birth)
+            return redirect('list-patient')
+        except:
+            return redirect('list-patient')
     return render(request, 'core/add_patient.html', context)
 
 
 def patientDetails(request):
     if request.method == 'GET':
-        patient_id = request.GET.get('patient_id')
-        patient_obj = Patient.objects.get(pk=patient_id)
-        context = {}
-        context['patient'] = patient_obj
-        return render(request, 'core/patient_details.html', context)
+        try:
+            patient_id = request.GET.get('patient_id')
+            patient_obj = Patient.objects.get(pk=patient_id)
+            context = {}
+            context['patient'] = patient_obj
+            return render(request, 'core/patient_details.html', context)
+        except Patient.DoesNotExist:
+            return redirect('list-patient')
     else:
         return redirect('list-patient')
 
 
 def updatePatient(request):
     if request.method == 'GET':
-        patient_id = request.GET.get('patient_id')
-        patient_obj = Patient.objects.get(pk=patient_id)
-        context = {}
-        context['patient'] = patient_obj
-        return render(request, 'core/edit_patient_details.html', context)
+        try:
+            patient_id = request.GET.get('patient_id')
+            patient_obj = Patient.objects.get(pk=patient_id)
+            context = {}
+            context['patient'] = patient_obj
+            return render(request, 'core/edit_patient_details.html', context)
+        except Patient.DoesNotExist:
+            return redirect('list-patient')
     elif request.method == 'POST':
-        patient_id = int(request.POST.get('patient_id'))
-        patient_obj = Patient.objects.get(pk=patient_id)
-        patient_obj.first_name = request.POST.get('first_name')
-        patient_obj.date_of_birth = datetime.strptime(
-            request.POST.get('date_of_birth'), '%m/%d/%Y').date()
-        patient_obj.gender = request.POST.get('gender')
-        patient_obj.save()
-        return redirect('list-patient')
+        try:
+            patient_id = int(request.POST.get('patient_id'))
+            patient_obj = Patient.objects.get(pk=patient_id)
+            patient_obj.first_name = request.POST.get('first_name')
+            patient_obj.date_of_birth = datetime.strptime(
+                request.POST.get('date_of_birth'), '%m/%d/%Y').date()
+            patient_obj.gender = request.POST.get('gender')
+            patient_obj.save()
+            return redirect('list-patient')
+        except Patient.DoesNotExist:
+            return redirect('list-patient')
     else:
         return redirect('list-patient')
 
 
 def deletePatient(request):
     if request.method == 'POST':
-        patient_id = int(request.POST.get('patient_id'))
-        Patient.objects.get(pk=patient_id).delete()
-        return JsonResponse({'status': 'deleted'})
+        try:
+            patient_id = int(request.POST.get('patient_id'))
+            Patient.objects.get(pk=patient_id).delete()
+            return JsonResponse({'status': 'deleted'})
+        except Patient.DoesNotExist:
+            return JsonResponse({'status': 'failed'})
     return redirect('list-patient')
 
 
