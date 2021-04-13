@@ -42,14 +42,11 @@ def patientDetails(request):
 
 def updatePatient(request):
     if request.method == 'GET':
-        try:
-            patient_id = request.GET.get('patient_id')
-            patient_obj = Patient.objects.get(pk=patient_id)
-            context = {}
-            context['patient'] = patient_obj
-            return render(request, 'core/edit_patient_details.html', context)
-        except Patient.DoesNotExist:
-            return redirect('list-patient')
+        patient_id = request.GET.get('patient_id')
+        patient_obj = Patient.objects.get(pk=patient_id)
+        context = {}
+        context['patient'] = patient_obj
+        return render(request, 'core/edit_patient_details.html', context)
     elif request.method == 'POST':
         try:
             patient_id = int(request.POST.get('patient_id'))
