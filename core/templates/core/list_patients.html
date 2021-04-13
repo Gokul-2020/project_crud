@@ -1,0 +1,102 @@
+{% extends "core/base.html" %}
+{% block css %}
+<!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css"> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+
+<style>
+    .pagination>li>a,
+    .pagination>li>span {
+        background-color: white
+    }
+
+    <!-- .pagination>li.active>a,
+    .pagination>li.active>span {
+        background-color: green
+    } -->
+    .page-item.active .page-link{
+        background-color: #173795
+    }
+</style>
+
+{% endblock css %}
+
+
+{% block content %}
+<div class="row mt-5">
+    <div class="mt-5 col-sm-12 col-md-12 col-lg-12">
+        <div class="card shadow">
+            <div class="card-body">
+                <!-- <article class="media content-section"> -->
+                <h2>List of Patients</h2>
+                <div class="row">
+                    <div class="col-1" style="margin: auto 0 auto auto;">
+                        <a class="simple_anchor" href="{% url 'add-patient' %}"><i class="fa fa-user-plus fa-2x" aria-hidden="false"></i></a>
+                    </div>
+                </div>
+
+                <!-- <p>The form below shows input elements with different widths using different .col-xs-* classes:</p> -->
+                <table id="patient_list" class="display table table-bordered" style="width:100%">
+                    {% include 'core/patient_table.html' %}
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- </article> -->
+{% endblock content %}
+
+{% block js %}
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+
+
+<script type="text/javascript">
+    var table;
+    $(document).ready(function() {
+        table = $('#patient_list').DataTable({
+            searching: false
+        });
+        // get_table_data();
+
+        $('.ajax_link1').click(function() {
+            event.preventDefault();
+            // console.log(get);
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'delete-patient' %}",
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}',
+                    'patient_id': $(this).attr('href')
+                },
+                datatype: 'json',
+                success: function(response) {
+                    get_table_data();
+                }
+            });
+            // or alert($(this).hash();
+        });
+
+    });
+
+    function get_table_data() {
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'ajax-list-patient' %}",
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            },
+            datatype: 'json',
+            success: function(response) {
+                res = response['table_html'];
+                table = $('#patient_list').DataTable().clear().destroy();
+                $('#patient_list').html(res);
+                table = $('#patient_list').DataTable({
+                    searching: false
+                });
+            }
+        });
+    }
+</script>
+{% endblock js %}

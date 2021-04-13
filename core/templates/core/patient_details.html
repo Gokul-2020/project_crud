@@ -1,0 +1,58 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <div class="card shadow">
+            <div class="card-header">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{% url 'list-patient' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">{{patient.first_name}}</li>
+                        <li class="ml-auto"><a class="simple_anchor" href="/dashboard/edit?patient_id={{patient.id}}"><i class="fa fa-pencil-square-o" style="font-size:25px" aria-hidden="true"></i> Edit Profile</a></li>
+                    </ol>
+                </nav>
+            </div>
+            <div class="card-body">
+                <!-- <article class="media content-section"> -->
+
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label for="first_name">Name</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" name="first_name" id="first_name" type="text" value="{{patient.first_name}}" disabled>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label for="date_of_birth">Date of Birth</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" name="date_of_birth" id="date_of_birth" type="text" value="{{patient.date_of_birth}}" disabled>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-3">
+                        <label for="gender">Gender</label>
+                    </div>
+                    <div class="col-3">
+                        <input class="form-control" name="gender" id="gender" type="text" value="{{patient.gender}}" disabled>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- </article> -->
+    {% endblock content %}
+
+    {% block js %}
+    <script type="text/javascript">
+        $(function() {
+            $('[data-toggle="datepicker"]').datepicker({
+                autoHide: true,
+                zIndex: 2048,
+                format: 'mm/dd/yyyy',
+            });
+        });
+    </script>
+    {% endblock js %}

@@ -1,0 +1,41 @@
+{% load static %}
+
+<thead class="" style="background-color:#173795; color:white;">
+    <tr>
+        <th>Patient Name</th>
+        <th>Date of Birth</th>
+        <th>Action</th>
+    </tr>
+</thead>
+<tbody id='patient_list_tb'>
+    {% for patient in patient_list %}
+    <tr>
+        <td> {{patient.first_name}} </td>
+        <td> {{patient.date_of_birth}} </td>
+        <td> <a class="" style="text-decoration: none;" href="/dashboard/detail/?patient_id={{patient.id}}" name="view">View</a> <a class="ajax_link1 ml-4" style="color:red; text-decoration: none;" href="{{patient.id}}" name="delete">Delete</a></td>
+    </tr>
+    {% endfor %}
+</tbody>
+
+<script type="text/javascript">
+    $('.ajax_link1').click(function() {
+        event.preventDefault();
+        // console.log(get);
+        $.ajax({
+            type: 'POST',
+            url: "{% url 'delete-patient' %}",
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+                'patient_id': $(this).attr('href')
+            },
+            datatype: 'json',
+            success: function(response) {
+                console.log('success');
+                get_table_data();
+                console.log('success');
+            }
+        });
+        // or alert($(this).hash();
+    });
+
+</script>

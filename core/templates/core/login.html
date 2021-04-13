@@ -1,0 +1,30 @@
+{% extends "core/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-6">
+        <div class="card shadow">
+            <div class="card-body">
+                <!-- <div class="content-section"> -->
+                    <form method="post">
+                        {% csrf_token %}
+                        <fieldset class="form_group">
+                            <legend class="border-bottom mb-4">Log In</legend>
+                            {{ form | crispy}}
+                        </fieldset>
+                        <div class="form_group">
+                            <button class="btn btn-info" type="submit" name="button">Log In</button>
+                        </div>
+                        <br>
+                    </form>
+                    <div class="border-top pt-3">
+                        <!-- <small class="text-muted">
+                            <a class="ml-2" href="#">Forgot Password?</a>
+                        </small> -->
+                    </div>
+                <!-- </div> -->
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content%}

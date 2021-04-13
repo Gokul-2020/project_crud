@@ -1,0 +1,66 @@
+{% extends "core/base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-sm-12 col-md-12 col-lg-12">
+        <div class="card shadow">
+            <div class="card-body">
+                <!-- <article class="media content-section"> -->
+                <h2>Add Patient</h2>
+                <!-- <p>The form below shows input elements with different widths using different .col-xs-* classes:</p> -->
+                <form action="." method="post" name="patient_form">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <div class="col-3">
+                            <label for="first_name">First Name*</label>
+                            <input class="form-control" name="first_name" id="first_name" type="text" required>
+                        </div>
+                        <div class="col-3">
+                            <label for="last_name">Last Name*</label>
+                            <input class="form-control" name="last_name" id="last_name" type="text" required>
+                        </div>
+                        <div class="col-3">
+                            <label for="date_of_birth">Date of Birth*</label>
+                            <div class="input-group">
+                                <input type="text" data-toggle="datepicker" class="form-control docs-date" name="date_of_birth" id="date_of_birth"  placeholder="mm/dd/yyyy" autocomplete="off" required>
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-outline-secondary docs-datepicker-trigger" disabled="">
+                                        <i class="fa fa-calendar" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- <input data-toggle="datepicker" class="form-control" name="date_of_birth" id="date_of_birth" type="text"> -->
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-1">
+                            <a class="btn btn-info" href="{% url 'list-patient' %}" name="button">Cancel</a>
+                        </div>
+                        <div class="col-1">
+                            <button class="btn btn-success" type="submit" name="button">Save</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- </article> -->
+{% endblock content %}
+
+{% block js %}
+<script type="text/javascript">
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    today = mm + '/' + dd + '/' + yyyy;
+    $(function() {
+        $('[data-toggle="datepicker"]').datepicker({
+            autoHide: true,
+            zIndex: 2048,
+            format: 'mm/dd/yyyy',
+            endDate: today,
+        });
+    });
+</script>
+{% endblock js %}
