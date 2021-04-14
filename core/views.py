@@ -26,6 +26,23 @@ def createPatient(request):
     return render(request, 'core/add_patient.html', context)
 
 
+def createPatientAjax(request):
+    context = {}
+    if request.method == 'POST':
+        try:
+            v_first_name = request.POST.get('first_name')
+            v_last_name = request.POST.get('last_name')
+            v_date_of_birth = datetime.strptime(
+                request.POST.get('date_of_birth'), '%m/%d/%Y').date()
+            patient_obj, created = Patient.objects.get_or_create(
+                first_name=v_first_name, last_name=v_last_name, date_of_birth=v_date_of_birth)
+            return JsonResponse({'status': 'success'})
+        except:
+            return JsonResponse({'status': 'failed'})
+    html = render_to_string('core/add_patient.html', context, request=request)
+    return JsonResponse({'html': html, 'url': '/add/'})
+
+
 def patientDetails(request):
     if request.method == 'GET':
         try:
@@ -80,7 +97,14 @@ def deletePatient(request):
 def listPatient(request):
     context = {}
     context['patient_list'] = Patient.objects.all().order_by('first_name')
-    return render(request, 'core/list_patients.html', context)
+    return render(request, 'core/home.html', context)
+
+
+def listPatientAjax(request):
+    context = {}
+    context['patient_list'] = Patient.objects.all().order_by('first_name')
+    html = render_to_string('core/list_patients.html', context, request=request)
+    return JsonResponse({'html': html})
 
 
 def getPatientsList(request):

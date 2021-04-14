@@ -1,5 +1,5 @@
-{% extends "core/base.html" %}
-{% block content %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'core/css/datepicker.css' %}">
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12">
         <div class="card shadow">
@@ -33,10 +33,10 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <a class="btn btn-info" href="{% url 'list-patient' %}" name="button">Cancel</a>
+                            <a class="btn btn-info cancel_add_patient_btn" href="#" name="button">Cancel</a>
                         </div>
                         <div class="col-1">
-                            <button class="btn btn-success" type="submit" name="button">Save</button>
+                            <button class="btn btn-success save_patient_btn" type="submit" name="button">Save</button>
                         </div>
                     </div>
                 </form>
@@ -45,9 +45,8 @@
     </div>
 </div>
 <!-- </article> -->
-{% endblock content %}
 
-{% block js %}
+<script type="text/javascript" src="{% static "core/js/datepicker.js" %}"></script>
 <script type="text/javascript">
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
@@ -62,5 +61,25 @@
             endDate: today,
         });
     });
+
+    $('.cancel_add_patient_btn').click(function() {
+        event.preventDefault();
+        create_patient_list_page();
+    });
+
+    $(document).on('submit', '.save_patient_btn', function(event) {
+            event.preventDefault();
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'ajax-add-patient-page' %}",
+                data: $(this).serialize(),
+                datatype: 'json',
+                success: function(response) {
+                    create_patient_list_page();
+                },
+                error: function(rs, e) {
+                    console.log(rs.responseText);
+                },
+            });
+        });
 </script>
-{% endblock js %}

@@ -1,4 +1,4 @@
-{% load static %}
+{% extends "core/base.html" %}
 {% block css %}
 <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css"> -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.css">
@@ -28,31 +28,16 @@
         <div class="card shadow">
             <div class="card-body">
                 <!-- <article class="media content-section"> -->
-                <!-- <h2>List of Patients</h2> -->
+                <h2>List of Patients</h2>
                 <div class="row">
                     <div class="col-1" style="margin: auto 0 auto auto;">
-                        <a class="simple_anchor add_patient_aj" href="{% url 'add-patient' %}"><i class="fa fa-user-plus fa-2x" aria-hidden="false"></i></a>
+                        <a class="simple_anchor" href="{% url 'add-patient' %}"><i class="fa fa-user-plus fa-2x" aria-hidden="false"></i></a>
                     </div>
                 </div>
 
                 <!-- <p>The form below shows input elements with different widths using different .col-xs-* classes:</p> -->
                 <table id="patient_list" class="display table table-bordered" style="width:100%">
-                    <thead class="" style="background-color:#173795; color:white;">
-                        <tr>
-                            <th>Patient Name</th>
-                            <th>Date of Birth</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody id='patient_list_tb'>
-                        {% for patient in patient_list %}
-                        <tr>
-                            <td> {{patient.first_name}} </td>
-                            <td> {{patient.date_of_birth}} </td>
-                            <td> <a class="" style="text-decoration: none;" href="/dashboard/detail/?patient_id={{patient.id}}" name="view">View</a> <a class="ajax_link1 ml-4" style="color:red; text-decoration: none;" href="{{patient.id}}" name="delete">Delete</a></td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
+                    {% include 'core/patient_table.html' %}
                 </table>
             </div>
         </div>
@@ -62,16 +47,16 @@
 {% endblock content %}
 
 {% block js %}
-
 <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
 <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+
 
 <script type="text/javascript">
     var table;
     $(document).ready(function() {
         table = $('#patient_list').DataTable({
-            searching: false, "bStateSave": true
+            searching: false
         });
         // get_table_data();
 
@@ -92,11 +77,7 @@
             });
             // or alert($(this).hash();
         });
-    });
 
-    $('.add_patient_aj').click(function() {
-        event.preventDefault();
-        create_add_patient_page();
     });
 
     function get_table_data() {
@@ -112,7 +93,7 @@
                 table = $('#patient_list').DataTable().clear().destroy();
                 $('#patient_list').html(res);
                 table = $('#patient_list').DataTable({
-                    searching: false, "bStateSave": true
+                    searching: false
                 });
             }
         });

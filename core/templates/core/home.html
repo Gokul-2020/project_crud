@@ -1,6 +1,47 @@
 {% extends "core/base.html" %}
 {% block content %}
-        <article class="media content-section">
-            abc
-        </article>
+<div id="main_content">
+    {% include 'core/list_patients.html' %}
+</div>
 {% endblock content%}
+{% block js %}
+<script type="text/javascript">
+    // create_patient_list_page();
+    function create_add_patient_page(){
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'ajax-add-patient-page' %}",
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            datatype: 'json',
+            success: function(response) {
+                $('#main_content').html(response['html']);
+                window.history.pushState({"html":$('body').html()},"", '/dashboard/add/');
+            }
+        });
+    }
+
+    function create_patient_list_page(){
+        $.ajax({
+            type: 'GET',
+            url: "{% url 'ajax-patient-list-page' %}",
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            datatype: 'json',
+            success: function(response) {
+                console.log('tt')
+                $('#main_content').html(response['html']);
+                window.history.pushState({"html":$('body').html()},"", '/dashboard/view/');
+            }
+        });
+    }
+
+    window.onpopstate = function(e){
+        if(e.state){
+            $('body').html(e.state.html)
+        }
+    };
+</script>
+{% endblock js %}
