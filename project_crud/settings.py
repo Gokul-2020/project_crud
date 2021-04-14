@@ -23,7 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
+# SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = 'django-insecure-cp2m^rnm=eq^)$n9-hh^=-w=ib+lz*yvtj%t1-wvgs0@s-^%d!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -86,11 +87,20 @@ WSGI_APPLICATION = 'project_crud.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default=config('DATABASE_URL')),
+# }
 DATABASES = {
-    'default': dj_database_url.config(
-        default=config('DATABASE_URL')),
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'project_crud',
+        'USER': 'root',
+        'PASSWORD': 'Mysql@123',
+        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'PORT': '3306',
+    },
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

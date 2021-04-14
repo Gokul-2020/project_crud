@@ -1,5 +1,7 @@
 {% extends "core/base.html" %}
+{% load static %}
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'core/css/datepicker.css' %}">
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12">
         <div class="card shadow">
@@ -78,6 +80,7 @@
     {% endblock content %}
 
     {% block js %}
+    <script type="text/javascript" src="{% static "core/js/datepicker.js" %}"></script>
     <script type="text/javascript">
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
