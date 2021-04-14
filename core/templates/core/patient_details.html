@@ -1,4 +1,4 @@
-{% extends "core/base.html" %}
+{% load static %}
 {% block content %}
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12">
@@ -8,7 +8,7 @@
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{% url 'list-patient' %}">Dashboard</a></li>
                         <li class="breadcrumb-item active" aria-current="page">{{patient.first_name}}</li>
-                        <li class="ml-auto"><a class="simple_anchor" href="/dashboard/edit/?patient_id={{patient.id}}"><i class="fa fa-pencil-square-o" style="font-size:25px" aria-hidden="true"></i> Edit Profile</a></li>
+                        <li class="ml-auto"><a class="simple_anchor aj_update_patient" href="/dashboard/edit/?patient_id={{patient.id}}"><i class="fa fa-pencil-square-o" style="font-size:25px" aria-hidden="true"></i> Edit Profile</a></li>
                     </ol>
                 </nav>
             </div>
@@ -47,12 +47,9 @@
 
     {% block js %}
     <script type="text/javascript">
-        $(function() {
-            $('[data-toggle="datepicker"]').datepicker({
-                autoHide: true,
-                zIndex: 2048,
-                format: 'mm/dd/yyyy',
-            });
+        $('.aj_update_patient').click(function() {
+            event.preventDefault();
+            create_patient_update_page($(this).attr('href'));
         });
     </script>
     {% endblock js %}

@@ -49,7 +49,7 @@
                         <tr>
                             <td> {{patient.first_name}} </td>
                             <td> {{patient.date_of_birth}} </td>
-                            <td> <a class="" style="text-decoration: none;" href="/dashboard/detail/?patient_id={{patient.id}}" name="view">View</a> <a class="ajax_link1 ml-4" style="color:red; text-decoration: none;" href="{{patient.id}}" name="delete">Delete</a></td>
+                            <td> <a class="aj_view_patient" style="text-decoration: none;" href="/dashboard/detail/?patient_id={{patient.id}}" name="view">View</a> <a class="ajax_link1 ml-4" style="color:red; text-decoration: none;" href="{{patient.id}}" name="delete">Delete</a></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -74,6 +74,12 @@
             searching: false, "bStateSave": true
         });
         // get_table_data();
+
+        $('.aj_view_patient').click(function() {
+            event.preventDefault();
+            console.log($(this).attr('href'))
+            create_patient_detail_page($(this).attr('href'));
+        });
 
         $('.ajax_link1').click(function() {
             event.preventDefault();

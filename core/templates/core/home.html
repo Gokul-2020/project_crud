@@ -7,7 +7,10 @@
 {% block js %}
 <script type="text/javascript">
     // create_patient_list_page();
+    $( ".datepicker-container, .datepicker-dropdown, .datepicker-top-left, .datepicker-hide" ).hide();
+    window.history.pushState({"html":$('body').html()},"", '/dashboard/view/');
     function create_add_patient_page(){
+
         $.ajax({
             type: 'GET',
             url: "{% url 'ajax-add-patient-page' %}",
@@ -20,6 +23,7 @@
                 window.history.pushState({"html":$('body').html()},"", '/dashboard/add/');
             }
         });
+
     }
 
     function create_patient_list_page(){
@@ -31,9 +35,37 @@
             },
             datatype: 'json',
             success: function(response) {
-                console.log('tt')
+
                 $('#main_content').html(response['html']);
                 window.history.pushState({"html":$('body').html()},"", '/dashboard/view/');
+            }
+        });
+    }
+
+    function create_patient_detail_page(p_url){
+        $.ajax({
+            type: 'GET',
+            url: p_url,
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}',
+            },
+            datatype: 'json',
+            success: function(response) {
+                $('#main_content').html(response['html']);
+                window.history.pushState({"html":$('body').html()},"", p_url);
+            }
+        });
+    }
+
+    function create_patient_update_page(p_url){
+        $.ajax({
+            type: 'GET',
+            url: p_url,
+            data: {csrfmiddlewaretoken: '{{ csrf_token }}'},
+            datatype: 'json',
+            success: function(response) {
+                $('#main_content').html(response['html']);
+                window.history.pushState({"html":$('body').html()},"", p_url);
             }
         });
     }
@@ -43,5 +75,8 @@
             $('body').html(e.state.html)
         }
     };
+    document.addEventListener("turbolinks:before-cache", function() {
+      table.destroy();
+    });
 </script>
 {% endblock js %}

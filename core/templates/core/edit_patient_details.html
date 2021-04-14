@@ -1,7 +1,6 @@
-{% extends "core/base.html" %}
 {% load static %}
 {% block content %}
-<link rel="stylesheet" type="text/css" href="{% static 'core/css/datepicker.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'core/css/bootstrap-datepicker.css' %}">
 <div class="row">
     <div class="col-sm-12 col-md-12 col-lg-12">
         <div class="card shadow">
@@ -10,7 +9,7 @@
 
                 <h2>Edit Patient Details</h2>
                 <!-- <article class="media content-section"> -->
-                <form action="." method="POST" name="patient_form">
+                <form action="." method="POST" class="save_update_patient" name="patient_form">
                     {% csrf_token %}
                     <div class="form-group row">
                         <div class="col-3">
@@ -25,7 +24,14 @@
                             <label for="date_of_birth">Date of Birth</label>
                         </div>
                         <div class="col-3">
-                            <input class="form-control" data-toggle="datepicker" name="date_of_birth" id="date_of_birth" type="text" value="{{patient.date_of_birth|date:'m/d/Y'}}" required>
+                            <div class="input-group date">
+                            <input class="form-control"  name="date_of_birth" id="date_of_birth" type="text" value="{{patient.date_of_birth|date:'m/d/Y'}}" required><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-secondary docs-datepicker-trigger" disabled="">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            </div>
                         </div>
                     </div>
                     <div class="form-group row">
@@ -65,7 +71,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-1">
-                            <a class="btn btn-info" href="{% url 'list-patient' %}" name="button">Cancel</a>
+                            <a class="btn btn-info cancel_update_patient_btn" href="{% url 'list-patient' %}" name="button">Cancel</a>
                         </div>
                         <div class="col-2">
                             <input type="hidden" name="patient_id" id="patient_id" value="{{patient.id}}">
@@ -80,20 +86,47 @@
     {% endblock content %}
 
     {% block js %}
-    <script type="text/javascript" src="{% static "core/js/datepicker.js" %}"></script>
+    <script type="text/javascript" src="{% static "core/js/bootstrap-datepicker.js" %}"></script>
     <script type="text/javascript">
         var today = new Date();
         var dd = String(today.getDate()).padStart(2, '0');
         var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
         var yyyy = today.getFullYear();
         today = mm + '/' + dd + '/' + yyyy;
-        $(function() {
-            $('[data-toggle="datepicker"]').datepicker({
-                autoHide: true,
-                zIndex: 2048,
-                format: 'mm/dd/yyyy',
-                endDate: today,
-            });
+
+        $('.input-group.date').datepicker({
+            format: "mm/dd/yyyy",
+            autoclose: true,
+            // defaultViewDate: { year: 1977, month: 04, day: 25 }
         });
+        // $(function() {
+        //     $('[data-toggle="datepicker"]').datepicker({
+        //         autoHide: true,
+        //         // zIndex: 2048,
+        //         format: 'mm/dd/yyyy',
+        //         endDate: today,
+        //     });
+        // });
+
+        $('.cancel_update_patient_btn').click(function() {
+            event.preventDefault();
+            create_patient_list_page();
+        });
+
+        $(document).on('submit', '.save_update_patient', function(event) {
+                event.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: "{% url 'ajax-patient-update-page' %}",
+                    data: $(this).serialize(),
+                    datatype: 'json',
+                    success: function(response) {
+                        create_patient_list_page();
+                    },
+                    error: function(rs, e) {
+                        console.log(rs.responseText);
+                    },
+                });
+            });
     </script>
     {% endblock js %}
