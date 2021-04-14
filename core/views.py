@@ -11,19 +11,7 @@ def genForwarder(request):
 
 
 def createPatient(request):
-    context = {}
-    if request.method == 'POST':
-        try:
-            v_first_name = request.POST.get('first_name')
-            v_last_name = request.POST.get('last_name')
-            v_date_of_birth = datetime.strptime(
-                request.POST.get('date_of_birth'), '%m/%d/%Y').date()
-            patient_obj, created = Patient.objects.get_or_create(
-                first_name=v_first_name, last_name=v_last_name, date_of_birth=v_date_of_birth)
-            return redirect('list-patient')
-        except:
-            return redirect('list-patient')
-    return render(request, 'core/add_patient.html', context)
+    return redirect('list-patient')
 
 
 def createPatientAjax(request):
